@@ -14,6 +14,11 @@ import { bindActionCreators } from "redux";
 // export default CoursesPage;
 
 class CoursesPage extends React.Component {
+  componentDidMount() {
+    this.props.actions.loadCourses().catch((error) => {
+      alert("Loading courses fail" + error);
+    });
+  }
   render() {
     return (
       <>
@@ -43,7 +48,6 @@ function mapStateToProps(state) {
 }
 function mapDispatchToProps(dispatch) {
   //list of courses available on this.props.courses
-
   return {
     actions: bindActionCreators(courseActions, dispatch), //bindAction.. returns an object mimicking the original object, but with each function wrapped in a call to dispatch
   };

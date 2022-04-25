@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware, compose } from "redux";
 import rootReducer from "./reducers";
-
+import thunk from "redux-thunk";
 import reduxImmutableStateInvariant from "redux-immutable-state-invariant";
 
 export default function configureStore(initialState) {
@@ -9,7 +9,7 @@ export default function configureStore(initialState) {
   return createStore(
     rootReducer,
     initialState,
-    composeEnhancers(applyMiddleware(reduxImmutableStateInvariant())) //This will warn us if we accidentally mutate Redux state
+    composeEnhancers(applyMiddleware(thunk, reduxImmutableStateInvariant())) //This will warn us if we accidentally mutate Redux state
   );
 }
 //Redux middleware is a way to enhance Redux's behavior

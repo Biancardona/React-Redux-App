@@ -13,8 +13,7 @@ export function loadCoursesSuccess(courses) {
 //loading courses when the app initially loads
 export function loadCourses() {
   return function (dispatch) {
-    //REdux thunk injects dispatch so we dont have to
-
+    //Redux thunk injects dispatch so we dont have to
     return courseApi
       .getCourses()
       .then((courses) => {

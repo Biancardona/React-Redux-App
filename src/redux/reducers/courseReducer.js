@@ -1,6 +1,7 @@
 import * as types from "../actions/actionTypes";
+import initialState from "./initialState";
 
-export default function courseReducer(state = [], action) {
+export default function courseReducer(state = initialState.courses, action) {
   //Initializying state to an empty array because this will end up storying and array of courses
   switch (action.type) {
     case types.CREATE_COURSE:

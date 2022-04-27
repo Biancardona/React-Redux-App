@@ -3,8 +3,6 @@ import { connect } from "react-redux";
 import * as courseActions from "../../redux/actions/courseActions";
 import * as authorActions from "../../redux/actions/authorActions";
 import PropTypes from "prop-types";
-import { bindActionCreators } from "redux";
-import CourseList from "./CourseList";
 
 // const ManageCoursePage = () => (
 //   <div>
@@ -17,15 +15,15 @@ import CourseList from "./CourseList";
 
 class ManageCoursePage extends React.Component {
   componentDidMount() {
-    const { courses, authors, actions } = this.props;
+    const { courses, authors, loadAuthors, loadCourses } = this.props;
 
     if (courses.length === 0) {
-      actions.loadCourses().catch((error) => {
+     loadCourses().catch((error) => {
         alert("Loading courses fail" + error);
       });
     }
     if (authors.length === 0) {
-      actions.loadAuthors().catch((error) => {
+      loadAuthors().catch((error) => {
         alert("Loading authors fail" + error);
       });
     }
@@ -43,7 +41,8 @@ class ManageCoursePage extends React.Component {
 ManageCoursePage.propTypes = {
   authors: PropTypes.array.isRequired,
   courses: PropTypes.array.isRequired,
-  actions: PropTypes.object.isRequired, //Only the actions we declared in mapDispatchToProps are passed in
+  loadAuthors: PropTypes.func.isRequired, 
+  loadCourses: PropTypes.func.isRequired, 
 };
 
 function mapStateToProps(state) {
@@ -55,15 +54,13 @@ function mapStateToProps(state) {
     authors: state.authors,
   };
 }
-function mapDispatchToProps(dispatch) {
-  //list of courses available on this.props.courses
-  return {
-    actions: {
-      loadCourses: bindActionCreators(courseActions.loadCourses, dispatch), //bindAction.. returns an object mimicking the original object, but with each function wrapped in a call to dispatch
-      loadAuthors: bindActionCreators(authorActions.loadAuthors, dispatch), //bindAction.. returns an object mimicking the original object, but with each function wrapped in a call to dispatch
+
+//Changing mapDispatchtoProps to a single object
+const mapDispatchToProps = {
+      loadCourses: courseActions.loadCourses, 
+      loadAuthors: authorActions.loadAuthors, 
     },
-  };
-}
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManageCoursePage); //Connect function connects our components to REdux, takes 2 parameters. Then we take the result of this and call ManageCoursePage
 //When we omit mapDispatchProps, our component gets a dispatch prop injected automatically.

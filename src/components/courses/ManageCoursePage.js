@@ -34,10 +34,25 @@ function ManageCoursePage({
       });
     }
   }, []);
+  //The convention in COurseFormPage (name and value) will allows to update the corresponding property in state with a single change handler.
+  //function handleChange will accept an event, then destructuring of that event , then call setCourse, and use the functional form of setState
+
+  function handleChange(event) {
+    const { name, value } = event.target;
+    setCourse((prevCourse) => ({
+      //You can pass either an object or a function to setState
+      [name]: name === "authorId" ? parseInt(value, 10) : value, //JS's computed property syntax. It allows us to reference a property via a variable.We need to handle the author ID as a number, so ParseIn to convert that value to a number
+    }));
+  }
 
   return (
     <>
-      <CourseForm course={course} errors={errors} authors={authors} />
+      <CourseForm
+        course={course}
+        errors={errors}
+        authors={authors}
+        onChange={handleChange}
+      />
     </>
   );
 }

@@ -1,10 +1,27 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import * as courseActions from "../../redux/actions/courseActions";
 import * as authorActions from "../../redux/actions/authorActions";
 import PropTypes from "prop-types";
+import CourseForm from "./CourseForm";
+import { newCourse } from "../../../tools/mockData";
 
-function ManageCoursePage({ courses, authors, loadAuthors, loadCourses }) {
+function ManageCoursePage({
+  courses,
+  authors,
+  loadAuthors,
+  loadCourses,
+  ...props
+}) {
+  //...props says "Assign any props I havent destructured on the left to a variable called props."
+
+  //NewCourse Form needs state to hold the form field values before they're saved, so, need set up some local state (useState Hook    )
+  // useState returtn a pair of values. We use array destructuring syntax to  assing each value a name.
+  //First value is the state variable, an the second value is the setter function fot that variable.
+  //useState accepts a default argument, we're specifyng that it should initialize ur course state variable to a copy of the course passed in on props
+
+  const [course, setCourse] = useState({ ...props.course }); //course that is passed in on props
+  const [errors, setErrors] = useState({});
   useEffect(() => {
     if (courses.length === 0) {
       loadCourses().catch((error) => {
@@ -20,13 +37,14 @@ function ManageCoursePage({ courses, authors, loadAuthors, loadCourses }) {
 
   return (
     <>
-      <h2>Manage Course</h2>
+      <CourseForm course={course} errors={errors} authors={authors} />
     </>
   );
 }
 
 //This is to clarified that we expect dispatch to be passed into de ManageCoursePage component and it will be passed in because connect automatically passes dispatch in if we omit that second argunment
 ManageCoursePage.propTypes = {
+  course: PropTypes.object.isRequired,
   authors: PropTypes.array.isRequired,
   courses: PropTypes.array.isRequired,
   loadAuthors: PropTypes.func.isRequired, //Only the actions we declared in mapDispatchToProps are passed in
@@ -38,6 +56,7 @@ function mapStateToProps(state) {
 
   return {
     //courses on props
+    course: newCourse,
     courses: state.courses,
     authors: state.authors,
   };

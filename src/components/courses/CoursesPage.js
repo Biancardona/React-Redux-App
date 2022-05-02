@@ -6,15 +6,6 @@ import PropTypes from "prop-types";
 import { bindActionCreators } from "redux";
 import CourseList from "./CourseList";
 
-// const CoursesPage = () => (
-//   <div>
-//     <h2>Courses</h2>
-//     <p>React, Redux and React Router for ultra-responsive web apps.</p>
-//   </div>
-// );
-
-// export default CoursesPage;
-
 class CoursesPage extends React.Component {
   componentDidMount() {
     const { courses, authors, actions } = this.props;

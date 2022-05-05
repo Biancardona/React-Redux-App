@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import * as courseActions from "../../redux/actions/courseActions";
-import * as authorActions from "../../redux/actions/authorActions";
+import { loadCourses, saveCourse } from "../../redux/actions/courseActions";
+import { loadAuthors } from "../../redux/actions/authorActions";
 import PropTypes from "prop-types";
 import CourseForm from "./CourseForm";
 import { newCourse } from "../../../tools/mockData";
@@ -11,6 +11,7 @@ function ManageCoursePage({
   authors,
   loadAuthors,
   loadCourses,
+  saveCourse,
   ...props
 }) {
   //...props says "Assign any props I havent destructured on the left to a variable called props."
@@ -45,6 +46,11 @@ function ManageCoursePage({
     }));
   }
 
+  function handleSave(event) {
+    event.preventDefault();
+    saveCourse(course); // This is passed in on props, so it's already bound to dispatch  => ({
+  }
+
   return (
     <>
       <CourseForm
@@ -52,6 +58,7 @@ function ManageCoursePage({
         errors={errors}
         authors={authors}
         onChange={handleChange}
+        onSave={handleSave}
       />
     </>
   );
@@ -64,6 +71,7 @@ ManageCoursePage.propTypes = {
   courses: PropTypes.array.isRequired,
   loadAuthors: PropTypes.func.isRequired, //Only the actions we declared in mapDispatchToProps are passed in
   loadCourses: PropTypes.func.isRequired,
+  saveCourse: PropTypes.func.isRequired,
 };
 
 function mapStateToProps(state) {
@@ -77,9 +85,10 @@ function mapStateToProps(state) {
   };
 }
 const mapDispatchToProps = {
-  //list of courses available on this.props.courses
-  loadCourses: courseActions.loadCourses,
-  loadAuthors: authorActions.loadAuthors,
+  //list of courses available on this.props.courses (object style)
+  loadCourses,
+  loadAuthors,
+  saveCourse,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManageCoursePage); //Connect function connects our components to REdux, takes 2 parameters. Then we take the result of this and call ManageCoursePage

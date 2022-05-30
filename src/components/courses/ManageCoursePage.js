@@ -12,6 +12,7 @@ function ManageCoursePage({
   loadAuthors,
   loadCourses,
   saveCourse,
+  history,
   ...props
 }) {
   //...props says "Assign any props I havent destructured on the left to a variable called props."
@@ -48,7 +49,8 @@ function ManageCoursePage({
 
   function handleSave(event) {
     event.preventDefault();
-    saveCourse(course); // This is passed in on props, so it's already bound to dispatch  => ({
+    saveCourse(course).then; // This is passed in on props, so it's already bound to dispatch  => ({
+    history.push("/courses");
   }
 
   return (
@@ -72,6 +74,7 @@ ManageCoursePage.propTypes = {
   loadAuthors: PropTypes.func.isRequired, //Only the actions we declared in mapDispatchToProps are passed in
   loadCourses: PropTypes.func.isRequired,
   saveCourse: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired, //any component that's loaded via React Router route gets the history object passed in automatically
 };
 
 function mapStateToProps(state) {

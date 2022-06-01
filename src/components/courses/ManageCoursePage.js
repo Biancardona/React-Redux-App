@@ -29,13 +29,16 @@ function ManageCoursePage({
       loadCourses().catch((error) => {
         alert("Loading courses fail" + error);
       });
+    } else {
+      setCourse({ ...props.course });
     }
+
     if (authors.length === 0) {
       loadAuthors().catch((error) => {
         alert("Loading authors fail" + error);
       });
     }
-  }, []);
+  }, [props.course]);
   //The convention in COurseFormPage (name and value) will allows to update the corresponding property in state with a single change handler.
   //function handleChange will accept an event, then destructuring of that event , then call setCourse, and use the functional form of setState
 
@@ -49,8 +52,10 @@ function ManageCoursePage({
 
   function handleSave(event) {
     event.preventDefault();
-    saveCourse(course).then; // This is passed in on props, so it's already bound to dispatch  => ({
-    history.push("/courses");
+    saveCourse(course).then(() => {
+      // This is passed in on props, so it's already bound to dispatch  => ({
+      history.push("/courses");
+    });
   }
 
   return (
@@ -77,12 +82,22 @@ ManageCoursePage.propTypes = {
   history: PropTypes.object.isRequired, //any component that's loaded via React Router route gets the history object passed in automatically
 };
 
-function mapStateToProps(state) {
-  //list of courses available on this.props.courses
+export function getCourseBySlug(courses, slug) {
+  //This is a selector. It selects data from the Redux store.
+  return courses.find((course) => course.slug === slug) || null;
+}
 
+function mapStateToProps(state, ownProps) {
+  //ownProps lets us access the component's props
+  //list of courses available on this.props.courses
+  const slug = ownProps.match.params.slug;
+  const course =
+    slug && state.courses.length > 0
+      ? getCourseBySlug(state.courses, slug)
+      : newCourse;
   return {
     //courses on props
-    course: newCourse,
+    course,
     courses: state.courses,
     authors: state.authors,
   };

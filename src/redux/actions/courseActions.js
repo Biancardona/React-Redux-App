@@ -1,5 +1,6 @@
 import * as types from "./actionTypes";
 import * as courseApi from "../../api/courseApi";
+import { beginApiCall } from "./apiStatusActions";
 
 export function createCourse(course) {
   return { type: types.CREATE_COURSE, course };
@@ -22,6 +23,7 @@ export function updateCourseSuccess(course) {
 export function loadCourses() {
   return function (dispatch) {
     //Redux thunk injects dispatch so we dont have to
+    dispatch(beginApiCall());
     return courseApi
       .getCourses()
       .then((courses) => {
@@ -37,6 +39,7 @@ export function saveCourse(course) {
   return function (dispatch, getState) {
     //getState let us access the Redux store data
     //Redux thunk injects dispatch so we dont have to
+    dispatch(beginApiCall());
     return courseApi
       .saveCourse(course)
       .then((savedCourse) => {

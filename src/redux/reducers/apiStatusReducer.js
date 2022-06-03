@@ -12,7 +12,10 @@ export default function apiCallStatusReducer(
   if (action.type == types.BEGIIN_API_CALL) {
     //if instead switch
     return state + 1;
-  } else if (actionTypeEndsInSuccess(action.type)) {
+  } else if (
+    action.type === types.API_CALL_ERROR ||
+    actionTypeEndsInSuccess(action.type)
+  ) {
     return state - 1;
   }
   return state;

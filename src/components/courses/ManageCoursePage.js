@@ -56,11 +56,16 @@ function ManageCoursePage({
   function handleSave(event) {
     event.preventDefault();
     setSaving(true);
-    saveCourse(course).then(() => {
-      // This is passed in on props, so it's already bound to dispatch  => ({
-      toast.success("Course Saved");
-      history.push("/courses");
-    });
+    saveCourse(course)
+      .then(() => {
+        // This is passed in on props, so it's already bound to dispatch  => ({
+        toast.success("Course Saved");
+        history.push("/courses");
+      })
+      .catch((error) => {
+        setSaving(false);
+        setErrors({ onSave: error.message });
+      }); //setSaving to false bc we're going to stay on this page if an error occurs. This way the user try submittin the form again after an error occurs
   }
 
   return authors.length === 0 || courses.length === 0 ? (

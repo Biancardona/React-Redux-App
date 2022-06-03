@@ -31,18 +31,22 @@ class CoursesPage extends React.Component {
       <>
         {this.state.redirectToAddCoursePage && <Redirect to="/course" />}
         <h2>Courses</h2>
-        <Spinner />
-        <button
-          style={{ marginBottom: 20 }}
-          className="btn btn-primary add-course"
-          onClick={() => this.setState({ redirectToAddCoursePage: true })}
-        >
-          Add Course
-        </button>
-
-        <CourseList courses={this.props.courses}> </CourseList>
-
-        <input type="submit" value="Save" />
+        {this.props.loading ? ( //If loading is true, render the spinner,
+          <Spinner />
+        ) : (
+          <>
+            {" "}
+            <button
+              style={{ marginBottom: 20 }}
+              className="btn btn-primary add-course"
+              onClick={() => this.setState({ redirectToAddCoursePage: true })}
+            >
+              Add Course
+            </button>
+            <CourseList courses={this.props.courses}> </CourseList>
+            <input type="submit" value="Save" />
+          </>
+        )}
       </>
     );
   }
@@ -53,6 +57,7 @@ CoursesPage.propTypes = {
   authors: PropTypes.array.isRequired,
   courses: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired, //Only the actions we declared in mapDispatchToProps are passed in
+  loading: PropTypes.bool.isRequired,
 };
 
 function mapStateToProps(state) {
@@ -72,6 +77,7 @@ function mapStateToProps(state) {
             };
           }),
     authors: state.authors,
+    loading: state.apiCallsInProgress > 0, //Is the initial state , bc the app is loading if at least one API call is in progress
   };
 }
 function mapDispatchToProps(dispatch) {

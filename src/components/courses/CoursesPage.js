@@ -7,6 +7,7 @@ import { bindActionCreators } from "redux";
 import CourseList from "./CourseList";
 import { Redirect } from "react-router-dom/cjs/react-router-dom.min";
 import Spinner from "../common/Spinner";
+import { toast } from "react-toastify"; //notify
 
 class CoursesPage extends React.Component {
   state = {
@@ -26,6 +27,17 @@ class CoursesPage extends React.Component {
       });
     }
   }
+
+  handleDeleteCourse = (course) => {
+    toast.success("Course Deleted");
+    this.props.actions.deleteCourse(course).catch((error) => {
+      toast.error("Delete failed." + error.message, { autoClose: false });
+    });
+  };
+  //Optimistic tradeoff:
+  //+Better user experience when call succeeds
+  //-Confusing user experience if call fails
+
   render() {
     return (
       <>
@@ -43,8 +55,12 @@ class CoursesPage extends React.Component {
             >
               Add Course
             </button>
-            <CourseList courses={this.props.courses}> </CourseList>
-            <input type="submit" value="Save" />
+            <CourseList
+              onDeleteClick={this.handleDeleteCourse}
+              courses={this.props.courses}
+            >
+              {" "}
+            </CourseList>
           </>
         )}
       </>
@@ -86,6 +102,7 @@ function mapDispatchToProps(dispatch) {
     actions: {
       loadCourses: bindActionCreators(courseActions.loadCourses, dispatch), //bindAction.. returns an object mimicking the original object, but with each function wrapped in a call to dispatch
       loadAuthors: bindActionCreators(authorActions.loadAuthors, dispatch), //bindAction.. returns an object mimicking the original object, but with each function wrapped in a call to dispatch
+      deleteCourse: bindActionCreators(courseActions.deleteCourse, dispatch),
     },
   };
 }

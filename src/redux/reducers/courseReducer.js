@@ -12,6 +12,8 @@ export default function courseReducer(state = initialState.courses, action) {
       ); //map returns a new array. This replacing the element with the matching course.id
     case types.LOAD_COURSES_SUCCESS:
       return action.courses; //This action will update the state with the new course added
+    case types.DELETE_COURSE_OPTIMISTIC:
+      return state.filter((course) => course.id !== action.course.id); //return the array of courses but omit the one tha was deleted. Using a predicate (function that return true or false)
     default:
       return state; //If some other action is dispatched that thisparticular reducer doesn't care about, it shoul just return the unchanged state
   }

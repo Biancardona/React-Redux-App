@@ -48,13 +48,26 @@ function ManageCoursePage({
   function handleChange(event) {
     const { name, value } = event.target;
     setCourse((prevCourse) => ({
+      ...prevCourse,
       //You can pass either an object or a function to setState
       [name]: name === "authorId" ? parseInt(value, 10) : value, //JS's computed property syntax. It allows us to reference a property via a variable.We need to handle the author ID as a number, so ParseIn to convert that value to a number
     }));
   }
+  function formIsValid() {
+    const { title, authorId, category } = course; //Destructuring at the top to shorten the calls below
+    const errors = {}; //empty errors object  and if and error is found =
+    if (!title) errors.title = "Title is required"; //set a property on each errors object that corresponds to the fields property in state
+    if (!authorId) errors.author = "Author is required";
+    if (!category) errors.category = "Category is required";
+
+    setErrors(errors); //passing the errors objects
+    //Form is valid is the errors object still has no properties
+    return Object.keys(errors).length === 0; //object.keys returns an array of objects properties so if there no properties on the object, then no errors where found
+  }
 
   function handleSave(event) {
     event.preventDefault();
+    if (!formIsValid()) return;
     setSaving(true);
     saveCourse(course)
       .then(() => {
